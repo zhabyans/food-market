@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {Logo} from '../../assets/Illustration';
+import {IlLogo} from '../../assets/Illustration';
 
 const SplashScreen = ({navigation}) => {
   useEffect(() => {
@@ -16,7 +16,7 @@ const SplashScreen = ({navigation}) => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <Logo />
+      <IlLogo />
       <View style={{height: 38}}></View>
       <Text
         style={{fontSize: 32, color: '#020202', fontFamily: 'Poppins-Medium'}}>
