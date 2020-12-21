@@ -1,2 +1,3 @@
-export * from './Illustration';
+export * from './Ilustration';
 export * from './Icon';
+export * from './Dummy';

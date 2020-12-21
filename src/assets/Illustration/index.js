@@ -1,3 +1,6 @@
-import IlLogo from './Logo.svg';
+import Logo from './Logo.svg';
 import IlSuccessSignUp from './SuccessSignUp.svg';
-export {IlLogo, IlSuccessSignUp};
+import IlSuccessOrder from './SuccessOrder.svg';
+import IlEmptyOrder from './EmptyOrder.svg';
+
+export {Logo, IlSuccessSignUp, IlSuccessOrder, IlEmptyOrder};
