@@ -1,13 +1,41 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import Axios from "axios";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import { useSelector } from "react-redux";
 import { Button, Gap, Header, TextInput } from "../../components";
+import useForm from "../../utils/useForm";
 
 const SignIn = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  console.log("render signin page");
+  const [form, setForm] = useForm({
+    email: "",
+    password: "",
+  });
 
-  const onSubmit = () => {
-    console.log(email);
+  // #MATERI AXIOS PROMISE
+  // const onSubmit = () => {
+  //   console.log(form);
+  //   Axios.post("http://foodmarket-backend.buildwithangga.id/api/login", form)
+  //     .then((res) => {
+  //       console.log(res);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
+
+  // #MATERI AXIOS ASYNC AWAIT
+  const onSubmit = async () => {
+    console.log(form);
+    try {
+      const data = await Axios.post(
+        "http://foodmarket-backend.buildwithangga.id/api/login",
+        form
+      );
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -17,15 +45,15 @@ const SignIn = ({ navigation }) => {
         <TextInput
           label="Email Address"
           placeholder="Type your email address"
-          onChangeText={(e) => setEmail(e)}
-          value={email}
+          onChangeText={(e) => setForm("email", e)}
+          value={form.email}
         />
         <Gap height={16} />
         <TextInput
           label="Password"
           placeholder="Type your password"
-          onChangeText={(e) => setPassword(e)}
-          value={password}
+          onChangeText={(e) => setForm("password", e)}
+          value={form.password}
           secureTextEntry
         />
         <Gap height={24} />
