@@ -1,22 +1,72 @@
-import { NavigationHelpersContext } from "@react-navigation/native";
-import React from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Gap, Header, TextInput } from "../../components";
-import { useForm } from "../../utils";
+import { showToast, useForm } from "../../utils";
+import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 
 const SignUp = ({ navigation }) => {
+  const { registerReducer, photoReducer } = useSelector((state) => state);
   const dispatch = useDispatch();
   const [form, setForm] = useForm({
     name: "",
     email: "",
     password: "",
   });
+  const [photo, setPhoto] = useState("");
 
   const onSubmit = () => {
-    // console.log(form);
     dispatch({ type: "SET_REGISTER", value: form });
     navigation.navigate("SignUpAddress");
+  };
+
+  const addPhoto = (type) => {
+    let options = {
+      mediaType: type,
+      maxWidth: 200,
+      maxHeight: 200,
+      quality: 0.5,
+    };
+    launchImageLibrary(options, (response) => {
+      console.log("Response = ", response);
+
+      if (response.didCancel) {
+        showToast("User cancelled camera picker");
+        return;
+      } else if (response.errorCode == "camera_unavailable") {
+        showToast("Camera not available on device");
+        return;
+      } else if (response.errorCode == "permission") {
+        showToast("Permission not satisfied");
+        return;
+      } else if (response.errorCode == "others") {
+        showToast(response.errorMessage);
+        return;
+      }
+      console.log("base64 -> ", response.base64);
+      console.log("uri -> ", response.uri);
+      console.log("width -> ", response.width);
+      console.log("height -> ", response.height);
+      console.log("fileSize -> ", response.fileSize);
+      console.log("type -> ", response.type);
+      console.log("fileName -> ", response.fileName);
+      const dataImage = {
+        uri: response.uri,
+        type: response.type,
+        name: response.fileName,
+      };
+      setPhoto(() => ({ uri: response.uri }));
+      dispatch({ type: "SET_PHOTO", value: dataImage });
+      dispatch({ type: "SET_UPLOAD_STATUS", value: true });
+      console.log(photoReducer);
+    });
   };
 
   return (
@@ -24,13 +74,19 @@ const SignUp = ({ navigation }) => {
       <View style={styles.page}>
         <Header title="Sign Up" subTitle="Register and eat" onBack={() => {}} />
         <View style={styles.container}>
-          <View style={styles.photo}>
-            <View style={styles.borderPhoto}>
-              <View style={styles.photoContainer}>
-                <Text style={styles.addPhoto}>Add{"\n"}Photo</Text>
+          <TouchableOpacity onPress={() => addPhoto("photo")}>
+            <View style={styles.photo}>
+              <View style={styles.borderPhoto}>
+                {photo ? (
+                  <Image source={photo} style={styles.photoContainer} />
+                ) : (
+                  <View style={styles.photoContainer}>
+                    <Text style={styles.addPhoto}>Add{"\n"}Photo</Text>
+                  </View>
+                )}
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
           <TextInput
             label="Full Name"
             placeholder="Type your full name"

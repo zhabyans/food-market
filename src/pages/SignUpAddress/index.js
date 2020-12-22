@@ -1,12 +1,12 @@
 import Axios from "axios";
 import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { showMessage } from "react-native-flash-message";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button, Gap, Header, Select, TextInput } from "../../components";
-import { useForm } from "../../utils";
+import { showToast, useForm } from "../../utils";
 
 const SignUpAddress = ({ navigation }) => {
+  const dispatch = useDispatch();
   console.log("render signupaddress");
   const [form, setForm] = useForm({
     phoneNumber: "",
@@ -14,31 +14,51 @@ const SignUpAddress = ({ navigation }) => {
     houseNumber: "",
     city: "Bandung",
   });
-  const registerReducer = useSelector((state) => state.registerReducer);
+  const { registerReducer, photoReducer } = useSelector((state) => state);
 
   const onSubmit = () => {
+    dispatch({ type: "SET_LOADING", value: true });
     const data = {
       ...form,
       ...registerReducer,
     };
+    console.log("photoReducer.isUploadPhoto", photoReducer.isUploadPhoto);
     Axios.post("http://foodmarket-backend.buildwithangga.id/api/register", data)
       .then((res) => {
+        if (photoReducer.isUploadPhoto) {
+          const photoForUpload = new FormData();
+          photoForUpload.append("file", photoReducer);
+          Axios.post(
+            "http://foodmarket-backend.buildwithangga.id/api/user/photo",
+            photoForUpload,
+            {
+              headers: {
+                Authorization: `${res.data.data.token_type} ${res.data.data.access_token}`,
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          )
+            .then((resPhoto) => {
+              console.log("upload sukses", resPhoto);
+            })
+            .catch((err) => {
+              console.log("upload gagal", err);
+              showToast("upload gagal");
+            });
+        }
+        console.log("register berhasil", res.data);
+        showToast("Register Berhasil", "success");
         navigation.replace("SuccessSignUp");
+        dispatch({ type: "SET_LOADING", value: false });
       })
       .catch((err) => {
+        console.log("register gagal", err);
+        dispatch({ type: "SET_LOADING", value: false });
         showToast(
           err?.response?.data?.message ?? "Eror tidak diketahui",
           "danger"
         );
       });
-  };
-
-  const showToast = (message, type) => {
-    showMessage({
-      message,
-      type: type === "success" ? "success" : "danger",
-      backgroundColor: type === "success" ? "#1ABC9C" : "#D9435E",
-    });
   };
 
   return (
