@@ -3,14 +3,14 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import Rating from "../Rating";
 import { FoodDummy6 } from "../../../assets";
 
-const FoodCard = () => {
+const FoodCard = ({ image, name, rating, onPress }) => {
   return (
-    <TouchableOpacity activeOpacity={0.7} onPress={() => {}}>
+    <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
       <View style={styles.container}>
-        <Image source={FoodDummy6} style={styles.image} />
+        <Image source={image} style={styles.image} />
         <View style={styles.content}>
-          <Text style={styles.text}>Kacang</Text>
-          <Rating number={1} />
+          <Text style={styles.text}>{name}</Text>
+          <Rating number={rating} />
         </View>
       </View>
     </TouchableOpacity>

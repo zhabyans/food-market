@@ -1,8 +1,11 @@
 import Axios from "axios";
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button, Gap, Header, TextInput } from "../../components";
+import { signInAction } from "../../redux/action/auth";
+import { setLoading } from "../../redux/action/global";
+import { getData } from "../../utils";
 import useForm from "../../utils/useForm";
 
 const SignIn = ({ navigation }) => {
@@ -12,31 +15,24 @@ const SignIn = ({ navigation }) => {
     password: "",
   });
 
-  // #MATERI AXIOS PROMISE
-  // const onSubmit = () => {
-  //   console.log(form);
-  //   Axios.post("http://foodmarket-backend.buildwithangga.id/api/login", form)
-  //     .then((res) => {
-  //       console.log(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
+  const dispatch = useDispatch();
+  const onSubmit = () => {
+    // #MATERI AXIOS PROMISE
+    dispatch(signInAction(form, navigation));
+  };
 
   // #MATERI AXIOS ASYNC AWAIT
-  const onSubmit = async () => {
-    console.log(form);
-    try {
-      const data = await Axios.post(
-        "http://foodmarket-backend.buildwithangga.id/api/login",
-        form
-      );
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const onSubmit = async () => {
+  //   try {
+  //     const data = await Axios.post(
+  //       "http://foodmarket-backend.buildwithangga.id/api/login",
+  //       form
+  //     );
+  //     console.log(data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <View style={styles.page}>
