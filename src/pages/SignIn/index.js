@@ -9,7 +9,6 @@ import { getData } from "../../utils";
 import useForm from "../../utils/useForm";
 
 const SignIn = ({ navigation }) => {
-  console.log("render signin page");
   const [form, setForm] = useForm({
     email: "",
     password: "",

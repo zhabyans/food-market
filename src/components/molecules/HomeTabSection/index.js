@@ -23,7 +23,6 @@ const NewTaste = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { newTaste } = useSelector((state) => state.homeReducer);
-  console.log(newTaste);
   useEffect(() => {
     dispatch(getFoodDataByTypes("new_food"));
   }, []);
@@ -50,7 +49,6 @@ const Popular = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { popular } = useSelector((state) => state.homeReducer);
-  console.log(popular);
   useEffect(() => {
     dispatch(getFoodDataByTypes("popular"));
   }, []);
@@ -77,7 +75,6 @@ const Recommended = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { recommended } = useSelector((state) => state.homeReducer);
-  console.log(recommended);
 
   useEffect(() => {
     dispatch(getFoodDataByTypes("recommended"));

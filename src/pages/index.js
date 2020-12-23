@@ -7,6 +7,8 @@ import Home from "./Home";
 import Profile from "./Profile";
 import Order from "./Order";
 import FoodDetail from "./FoodDetail";
+import OrderSummary from "./OrderSummary";
+import SuccessOrder from "./SuccessOrder";
 
 export {
   SplashScreen,
@@ -18,4 +20,6 @@ export {
   Profile,
   Order,
   FoodDetail,
+  OrderSummary,
+  SuccessOrder,
 };

@@ -1,5 +1,6 @@
 import Axios from "axios";
 import { API_HOST } from "../../config";
+import { showToast } from "../../utils";
 
 export const getFoodData = () => (dispatch) => {
   Axios.get(`${API_HOST.uri}/food`)
@@ -7,7 +8,7 @@ export const getFoodData = () => (dispatch) => {
       dispatch({ type: "SET_FOOD", value: res.data.data.data });
     })
     .catch((err) => {
-      console.log("gagal ", err);
+      showToast(err);
     });
 };
 
@@ -25,6 +26,6 @@ export const getFoodDataByTypes = (types) => (dispatch) => {
       }
     })
     .catch((err) => {
-      console.log("gagal ", err);
+      showToast(err);
     });
 };
