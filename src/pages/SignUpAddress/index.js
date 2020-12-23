@@ -3,11 +3,11 @@ import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Gap, Header, Select, TextInput } from "../../components";
+import { setLoading, signUpAction } from "../../redux/action";
 import { showToast, useForm } from "../../utils";
 
 const SignUpAddress = ({ navigation }) => {
   const dispatch = useDispatch();
-  console.log("render signupaddress");
   const [form, setForm] = useForm({
     phoneNumber: "",
     address: "",
@@ -17,48 +17,12 @@ const SignUpAddress = ({ navigation }) => {
   const { registerReducer, photoReducer } = useSelector((state) => state);
 
   const onSubmit = () => {
-    dispatch({ type: "SET_LOADING", value: true });
+    dispatch(setLoading(true));
     const data = {
       ...form,
       ...registerReducer,
     };
-    console.log("photoReducer.isUploadPhoto", photoReducer.isUploadPhoto);
-    Axios.post("http://foodmarket-backend.buildwithangga.id/api/register", data)
-      .then((res) => {
-        if (photoReducer.isUploadPhoto) {
-          const photoForUpload = new FormData();
-          photoForUpload.append("file", photoReducer);
-          Axios.post(
-            "http://foodmarket-backend.buildwithangga.id/api/user/photo",
-            photoForUpload,
-            {
-              headers: {
-                Authorization: `${res.data.data.token_type} ${res.data.data.access_token}`,
-                "Content-Type": "multipart/form-data",
-              },
-            }
-          )
-            .then((resPhoto) => {
-              console.log("upload sukses", resPhoto);
-            })
-            .catch((err) => {
-              console.log("upload gagal", err);
-              showToast("upload gagal");
-            });
-        }
-        console.log("register berhasil", res.data);
-        showToast("Register Berhasil", "success");
-        navigation.replace("SuccessSignUp");
-        dispatch({ type: "SET_LOADING", value: false });
-      })
-      .catch((err) => {
-        console.log("register gagal", err);
-        dispatch({ type: "SET_LOADING", value: false });
-        showToast(
-          err?.response?.data?.message ?? "Eror tidak diketahui",
-          "danger"
-        );
-      });
+    dispatch(signUpAction(data, photoReducer, navigation));
   };
 
   return (
@@ -67,7 +31,7 @@ const SignUpAddress = ({ navigation }) => {
         <Header
           title="Address"
           subTitle="Make sure it’s valid"
-          onBack={() => {}}
+          onBack={() => navigation.goBack()}
         />
         <View style={styles.container}>
           <TextInput

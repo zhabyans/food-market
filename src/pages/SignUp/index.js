@@ -65,14 +65,17 @@ const SignUp = ({ navigation }) => {
       setPhoto(() => ({ uri: response.uri }));
       dispatch({ type: "SET_PHOTO", value: dataImage });
       dispatch({ type: "SET_UPLOAD_STATUS", value: true });
-      console.log(photoReducer);
     });
   };
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View style={styles.page}>
-        <Header title="Sign Up" subTitle="Register and eat" onBack={() => {}} />
+        <Header
+          title="Sign Up"
+          subTitle="Register and eat"
+          onBack={() => navigation.goBack()}
+        />
         <View style={styles.container}>
           <TouchableOpacity onPress={() => addPhoto("photo")}>
             <View style={styles.photo}>

@@ -1,9 +1,9 @@
-import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {IlSuccessSignUp} from '../../assets';
-import {Button, Gap} from '../../components';
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { IlSuccessSignUp } from "../../assets";
+import { Button, Gap } from "../../components";
 
-const SuccessSignUp = ({navigation}) => {
+const SuccessSignUp = ({ navigation }) => {
   return (
     <View style={styles.page}>
       <IlSuccessSignUp />
@@ -16,7 +16,9 @@ const SuccessSignUp = ({navigation}) => {
       <View style={styles.buttonContainer}>
         <Button
           text="Find Foods"
-          onPress={() => navigation.replace('MainApp')}
+          onPress={() =>
+            navigation.reset({ index: 0, routes: [{ name: "MainApp" }] })
+          }
         />
       </View>
     </View>
@@ -28,14 +30,14 @@ export default SuccessSignUp;
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   title: {
     fontSize: 20,
-    fontFamily: 'Poppins-Regular',
-    color: '#020202',
+    fontFamily: "Poppins-Regular",
+    color: "#020202",
   },
-  subTitle: {fontSize: 14, fontFamily: 'Poppins-Light', color: '#8D92A3'},
-  buttonContainer: {width: '50%'},
+  subTitle: { fontSize: 14, fontFamily: "Poppins-Light", color: "#8D92A3" },
+  buttonContainer: { width: "50%" },
 });
