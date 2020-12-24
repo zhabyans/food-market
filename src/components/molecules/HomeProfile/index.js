@@ -1,15 +1,20 @@
+import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import { ProfileDummy } from "../../../assets";
 import { getData } from "../../../utils";
 
 const HomeProfile = () => {
+  const navigation = useNavigation();
   const [photo, setPhoto] = useState(ProfileDummy);
+
   useEffect(() => {
-    getData("userProfile").then((res) => {
-      setPhoto({ uri: res.profile_photo_url });
+    navigation.addListener("focus", () => {
+      getData("userProfile").then((res) => {
+        setPhoto({ uri: res.profile_photo_url });
+      });
     });
-  }, []);
+  }, [navigation]);
 
   return (
     <View style={styles.profileContainer}>

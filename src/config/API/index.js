@@ -1,3 +1,4 @@
 export const API_HOST = {
-  uri: "http://foodmarket-backend.buildwithangga.id/api",
+  url: "http://foodmarket-backend.buildwithangga.id/api",
+  storage: "https://foodmarket-backend.buildwithangga.id/storage",
 };

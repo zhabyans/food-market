@@ -1,21 +1,108 @@
-import React from "react";
+import Axios from "axios";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { ProfileDummy } from "../../assets";
+import { launchImageLibrary } from "react-native-image-picker";
 import { ProfileTabSection } from "../../components";
+import { API_HOST } from "../../config";
+import { getData, showMessage, showToast, storeData } from "../../utils";
 
 const Profile = ({ navigation }) => {
+  const [userProfile, setUserProfile] = useState({});
+  useEffect(() => {
+    navigation.addListener("focus", () => {
+      updateUserProfile();
+    });
+    console.log("userProfile", userProfile);
+  }, [navigation]);
+
+  const updateUserProfile = () => {
+    getData("userProfile").then((res) => {
+      setUserProfile(res);
+    });
+  };
+
+  const updatePhoto = (type) => {
+    let options = {
+      mediaType: type,
+      maxWidth: 200,
+      maxHeight: 200,
+      quality: 0.5,
+    };
+    launchImageLibrary(options, (response) => {
+      console.log("Response = ", response);
+
+      if (response.didCancel) {
+        showToast("User cancelled camera picker");
+        return;
+      } else if (response.errorCode == "camera_unavailable") {
+        showToast("Camera not available on device");
+        return;
+      } else if (response.errorCode == "permission") {
+        showToast("Permission not satisfied");
+        return;
+      } else if (response.errorCode == "others") {
+        showToast(response.errorMessage);
+        return;
+      }
+      console.log("base64 -> ", response.base64);
+      console.log("uri -> ", response.uri);
+      console.log("width -> ", response.width);
+      console.log("height -> ", response.height);
+      console.log("fileSize -> ", response.fileSize);
+      console.log("type -> ", response.type);
+      console.log("fileName -> ", response.fileName);
+      const dataImage = {
+        uri: response.uri,
+        type: response.type,
+        name: response.fileName,
+      };
+      const photoForUpload = new FormData();
+      photoForUpload.append("file", dataImage);
+      getData("token").then((resToken) => {
+        Axios.post(`${API_HOST.url}/user/photo`, photoForUpload, {
+          headers: {
+            Authorization: resToken.value,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+          .then((res) => {
+            getData("userProfile").then((resUser) => {
+              resUser.profile_photo_url = `${API_HOST.storage}/${res.data.data[0]}`;
+              storeData("userProfile", resUser).then(() => {
+                showToast("Update Photo Berhasil", "success");
+                updateUserProfile();
+              });
+            });
+          })
+          .catch((err) => {
+            showToast(
+              `${err?.response?.data?.message} on Update Photo API` ||
+                "Terjadi kesalahan di API Update Photo"
+            );
+          });
+      });
+    });
+  };
+
   return (
     <View style={styles.page}>
       <View style={styles.profileDetail}>
         <View style={styles.photo}>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity
+            onPress={() => {
+              updatePhoto("photo");
+            }}
+          >
             <View style={styles.borderPhoto}>
-              <Image source={ProfileDummy} style={styles.photoContainer} />
+              <Image
+                source={{ uri: userProfile.profile_photo_url }}
+                style={styles.photoContainer}
+              />
             </View>
           </TouchableOpacity>
         </View>
-        <Text style={styles.name}>Kentang</Text>
-        <Text style={styles.email}>sopo@gmail.com</Text>
+        <Text style={styles.name}>{userProfile.name}</Text>
+        <Text style={styles.email}>{userProfile.email}</Text>
       </View>
       <View style={styles.content}>
         <ProfileTabSection />

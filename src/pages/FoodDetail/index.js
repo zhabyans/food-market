@@ -55,7 +55,6 @@ const FoodDetail = ({ navigation, route }) => {
       },
       userProfile,
     };
-    console.log(data);
     navigation.navigate("OrderSummary", data);
   };
 

@@ -27,7 +27,7 @@ const OrderSummary = ({ navigation, route }) => {
       status: "PENDING",
     };
     getData("token").then((resToken) => {
-      Axios.post(`${API_HOST.uri}/checkout`, data, {
+      Axios.post(`${API_HOST.url}/checkout`, data, {
         headers: {
           Authorization: resToken.value,
         },

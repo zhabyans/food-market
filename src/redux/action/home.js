@@ -3,7 +3,7 @@ import { API_HOST } from "../../config";
 import { showToast } from "../../utils";
 
 export const getFoodData = () => (dispatch) => {
-  Axios.get(`${API_HOST.uri}/food`)
+  Axios.get(`${API_HOST.url}/food`)
     .then((res) => {
       dispatch({ type: "SET_FOOD", value: res.data.data.data });
     })
@@ -13,7 +13,7 @@ export const getFoodData = () => (dispatch) => {
 };
 
 export const getFoodDataByTypes = (types) => (dispatch) => {
-  Axios.get(`${API_HOST.uri}/food?types=${types}`)
+  Axios.get(`${API_HOST.url}/food?types=${types}`)
     .then((res) => {
       if (types === "new_food") {
         dispatch({ type: "SET_NEW_TASTE", value: res.data.data.data });

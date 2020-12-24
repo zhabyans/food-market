@@ -6,7 +6,7 @@ import { setLoading } from "./global";
 export const signUpAction = (dataRegister, photoReducer, navigation) => (
   dispatch
 ) => {
-  Axios.post(`${API_HOST.uri}/register`, dataRegister)
+  Axios.post(`${API_HOST.url}/register`, dataRegister)
     .then((res) => {
       const token = `${res.data.data.token_type} ${res.data.data.access_token}`;
       const profile = res.data.data.user;
@@ -15,7 +15,7 @@ export const signUpAction = (dataRegister, photoReducer, navigation) => (
       if (photoReducer.isUploadPhoto) {
         const photoForUpload = new FormData();
         photoForUpload.append("file", photoReducer);
-        Axios.post(`${API_HOST.uri}/user/photo`, photoForUpload, {
+        Axios.post(`${API_HOST.url}/user/photo`, photoForUpload, {
           headers: {
             Authorization: token,
             "Content-Type": "multipart/form-data",
